@@ -81,7 +81,10 @@ public class IterativeOpModeAuto_Test extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private ElapsedTime loopCycleTime = new ElapsedTime();
+    ElapsedTime loopCycleTime = new ElapsedTime();
+
+    long cycles = 1;
+
 
 
     private DcMotor leftFrontDriveMotor = null;
@@ -185,8 +188,7 @@ public class IterativeOpModeAuto_Test extends OpMode
 
         // Normalize the values so no wheel power exceeds 100%
         // This ensures that the robot maintains the desired motion.
-        max = Math.max(Math.abs(leftFrontPower), 1);
-        max = Math.max(max, Math.abs(rightFrontPower));
+        max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
         max = Math.max(max, Math.abs(rightRearPower));
         max = Math.max(max, Math.abs(leftRearPower));
 
@@ -213,11 +215,13 @@ public class IterativeOpModeAuto_Test extends OpMode
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("Loop Cycle Time (ms): ", "%4.2f",loopCycleTime.milliseconds());
+        telemetry.addData("Loop Ave Cycle Time (ms): ", "%4.2f",runtime.milliseconds()/cycles);
         telemetry.addData("Front Left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
         telemetry.addData("Rear  Left/Right", "%4.2f, %4.2f", rightRearPower, leftRearPower);
         telemetry.update();
 
         loopCycleTime.reset();
+        cycles++;
     }
 
     /*
